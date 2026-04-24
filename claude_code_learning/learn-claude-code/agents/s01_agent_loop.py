@@ -43,9 +43,11 @@ from dotenv import load_dotenv
 
 load_dotenv(override=True)
 
+#因为 Anthropic SDK 会自动检测 ANTHROPIC_AUTH_TOKEN 环境变量，如果你用的是自定义 BASE_URL（第三方代理），就不能用官方的 auth token 了，所以要先删掉，避免 SDK 拿错凭证去请求。这是一个非常细的"防坑"处理。
 if os.getenv("ANTHROPIC_BASE_URL"):
     os.environ.pop("ANTHROPIC_AUTH_TOKEN", None)
 
+#Anthropic中如果传入的 base_url 为None，则会使用官网默认地址 https://api.anthropic.com
 client = Anthropic(base_url=os.getenv("ANTHROPIC_BASE_URL"))
 MODEL = os.environ["MODEL_ID"]
 
